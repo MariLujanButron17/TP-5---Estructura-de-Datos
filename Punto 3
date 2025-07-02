@@ -1,0 +1,144 @@
+#include <iostream>
+using namespace std;
+
+class Nodo {
+private:
+	int dato;
+	Nodo* sig;
+public:
+	Nodo(int dato) {
+		this->dato = dato;
+		this->sig = nullptr;
+	}
+
+	void setDato(int valor) {
+		dato = valor;
+	}
+
+	int getDato() {
+		return dato;
+	}
+
+	Nodo* getSiguiente() {
+		return sig;
+	}
+
+	void setSiguiente(Nodo* nuevo) {
+		sig = nuevo;
+	}
+};
+
+class Lista {
+private:
+	Nodo* inicio;
+	Nodo* fin;
+	int cant;
+public:
+	Lista() {
+		inicio = nullptr;
+		fin = nullptr;
+		cant = 0;
+	}
+
+	bool estaVacia() {
+		return inicio == nullptr;
+	}
+
+	void AgregarInicio(Nodo* nuevo) {
+		if (estaVacia()) {
+			inicio = nuevo;
+			fin = nuevo;
+		}
+		else {
+			nuevo->setSiguiente(inicio);
+			inicio = nuevo;
+		}
+		cant++;
+	}
+
+	void AgregarFinal(Nodo* nuevo) {
+		if (estaVacia()) {
+			inicio = nuevo;
+			fin = nuevo;
+		}
+		else {
+			fin->setSiguiente(nuevo);
+			fin = nuevo;
+		}
+		cant++;
+	}
+
+	Nodo* EliminarInicio() {
+		Nodo* borrado;
+		if (inicio == nullptr) {
+			borrado = nullptr;
+		}
+		else {
+			borrado = inicio;
+			inicio = inicio->getSiguiente();
+			borrado->setSiguiente(nullptr);
+			if (inicio == nullptr) {
+				fin = nullptr;
+			}
+			cant--;
+		}
+		return borrado;
+	}
+
+	void MostrarLista() {
+		Nodo* i = inicio;
+		while (i != nullptr) {
+			cout << i->getDato() << endl;
+			i = i->getSiguiente();
+		}
+	}
+
+	int getCantidad() {
+		return cant;
+	}
+
+	int buscarIndice(int valor) {
+		Nodo* i = inicio;
+		int pos = 0;
+		while (i != nullptr) {
+			if (i->getDato() == valor) {
+				return pos;
+			}
+			i = i->getSiguiente();
+			pos++;
+		}
+		return -1;
+	}
+
+	Nodo* buscarPorIndice(int indice) {
+		if (indice < 0 || indice >= cant) {
+			return nullptr;
+		}
+		Nodo* i = inicio;
+		int pos = 0;
+		while (i != nullptr && pos < indice) {
+			i = i->getSiguiente();
+			pos++;
+		}
+		return i;
+	}
+};
+
+int main() {
+	Lista lista;
+
+	Nodo* n1 = new Nodo(10);
+	Nodo* n2 = new Nodo(25);
+	Nodo* n3 = new Nodo(40);
+
+	lista.AgregarFinal(n1);
+	lista.AgregarFinal(n2);
+	lista.AgregarFinal(n3);
+
+	lista.MostrarLista();
+
+	int indice = lista.buscarIndice(25);      // Esperado: 1
+	Nodo* buscado = lista.buscarPorIndice(2); // Esperado: nodo con dato 40
+
+	return 0;
+}
