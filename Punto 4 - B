@@ -1,0 +1,85 @@
+#include <iostream>
+using namespace std;
+
+const int MAX = 100;  // tamaño máximo de la cola
+
+typedef struct Cola {
+    int datos[MAX];
+    int frente;
+    int fin;
+    int contador;   // contador de elementos
+} Cola;
+
+void initQueue(Cola &c) {
+    c.frente = 0;
+    c.fin = 0;
+    c.contador = 0;
+}
+
+int siguiente(int indice) {
+    return (indice + 1) % MAX;
+}
+
+bool isEmptyQueue(Cola c) {
+    return c.contador == 0;
+}
+
+bool isFullQueue(Cola c) {
+    return c.contador == MAX;
+}
+
+void pushQueue(Cola &c, int nuevo) {
+    if (isFullQueue(c)) {
+        cout << "La cola está llena, no se puede encolar\n";
+    } else {
+        c.datos[c.fin] = nuevo;
+        c.fin = siguiente(c.fin);
+        c.contador++;
+    }
+}
+
+int pullQueue(Cola &c) {
+    int extraido = -1;
+    if (isEmptyQueue(c)) {
+        cout << "La cola está vacía, no se puede desencolar\n";
+    } else {
+        extraido = c.datos[c.frente];
+        c.frente = siguiente(c.frente);
+        c.contador--;
+    }
+    return extraido;
+}
+
+int topQueue(Cola c) {
+    int valor = -1;
+    if (isEmptyQueue(c)) {
+        cout << "La cola está vacía\n";
+    } else {
+        valor = c.datos[c.frente];
+    }
+    return valor;
+}
+
+int sizeQueue(Cola c) {
+    return c.contador;
+}
+
+int main() {
+    Cola cola;
+    initQueue(cola);
+
+    pushQueue(cola, 5);
+    pushQueue(cola, 10);
+    pushQueue(cola, 15);
+
+    cout << "Frente de la cola: " << topQueue(cola) << endl;
+    cout << "Tamaño: " << sizeQueue(cola) << endl;
+
+    int sacado = pullQueue(cola);
+    cout << "Elemento desencolado: " << sacado << endl;
+
+    cout << "Frente ahora: " << topQueue(cola) << endl;
+    cout << "Tamaño ahora: " << sizeQueue(cola) << endl;
+
+    return 0;
+}
