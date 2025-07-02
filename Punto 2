@@ -1,0 +1,120 @@
+#include <iostream>
+using namespace std;
+
+class Nodo {
+private:
+	int dato;
+	Nodo* sig;
+public:
+	Nodo(int dato) {
+		this->dato = dato;
+		this->sig = nullptr;
+	}
+
+	void setDato(int valor) {
+		dato = valor;
+	}
+
+	int getDato() {
+		return dato;
+	}
+
+	Nodo* getSiguiente() {
+		return sig;
+	}
+
+	void setSiguiente(Nodo* nuevo) {
+		sig = nuevo;
+	}
+};
+
+class Lista {
+private:
+	Nodo* inicio;
+	Nodo* fin;
+	int cant;
+public:
+	Lista() {
+		inicio = nullptr;
+		fin = nullptr;
+		cant = 0;
+	}
+
+	bool estaVacia() {
+		return inicio == nullptr;
+	}
+
+	void AgregarInicio(Nodo* nuevo) {
+		if (estaVacia()) {
+			inicio = nuevo;
+			fin = nuevo;
+		}
+		else {
+			nuevo->setSiguiente(inicio);
+			inicio = nuevo;
+		}
+		cant++;
+	}
+
+	void AgregarFinal(Nodo* nuevo) {
+		if (estaVacia()) {
+			inicio = nuevo;
+			fin = nuevo;
+		}
+		else {
+			fin->setSiguiente(nuevo);
+			fin = nuevo;
+		}
+		cant++;
+	}
+
+	Nodo* EliminarInicio() {
+		Nodo* borrado;
+		if (inicio == nullptr) {
+			borrado = nullptr;
+		}
+		else {
+			borrado = inicio;
+			inicio = inicio->getSiguiente();
+			borrado->setSiguiente(nullptr);
+			if (inicio == nullptr) {
+				fin = nullptr;
+			}
+			cant--;
+		}
+		return borrado;
+	}
+
+	void MostrarLista() {
+		Nodo* i = inicio;
+		while (i != nullptr) {
+			cout << i->getDato() << endl;
+			i = i->getSiguiente();
+		}
+	}
+
+	int getCantidad() {
+		return cant;
+	}
+};
+
+int main() {
+	Lista lista;
+
+	Nodo* n1 = new Nodo(10);
+	Nodo* n2 = new Nodo(20);
+	Nodo* n3 = new Nodo(30);
+
+	lista.AgregarInicio(n1);
+	lista.AgregarFinal(n2);
+	lista.AgregarFinal(n3);
+
+	lista.MostrarLista();
+
+	Nodo* eliminado = lista.EliminarInicio();
+	delete eliminado;
+
+	int cantidad = lista.getCantidad();
+
+	return 0;
+}
