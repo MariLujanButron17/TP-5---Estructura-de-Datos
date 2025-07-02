@@ -1,0 +1,114 @@
+#include <iostream>
+using namespace std;
+
+class Nodo {
+private:
+    int dato;
+    Nodo* sig;
+public:
+    Nodo(int dato) {
+        this->dato = dato;
+        this->sig = nullptr;
+    }
+
+    void setDato(int valor) {
+        dato = valor;
+    }
+
+    int getDato() {
+        return dato;
+    }
+
+    Nodo* getSiguiente() {
+        return sig;
+    }
+
+    void setSiguiente(Nodo* nuevo) {
+        sig = nuevo;
+    }
+};
+
+class Lista {
+private:
+    Nodo* inicio;
+    int cant;
+public:
+    Lista() {
+        inicio = nullptr;
+        cant = 0;
+    }
+
+    bool estaVacia() {
+        return inicio == nullptr;
+    }
+
+    void AgregarFinal(Nodo* nuevo) {
+        if (estaVacia()) {
+            inicio = nuevo;
+        }
+        else {
+            Nodo* i = inicio;
+            while (i->getSiguiente() != nullptr) {
+                i = i->getSiguiente();
+            }
+            i->setSiguiente(nuevo);
+        }
+        cant++;
+    }
+
+    void MostrarLista() {
+        if (estaVacia()) {
+            cout << "Lista vacía" << endl;
+        }
+        else {
+            Nodo* i = inicio;
+            while (i != nullptr) {
+                cout << i->getDato() << " -> ";
+                i = i->getSiguiente();
+            }
+            cout << "NULL" << endl;
+        }
+    }
+
+    int Minimo() {
+        if (estaVacia()) {
+            cout << "La lista está vacía. No hay mínimo." << endl;
+            return -1; // o lanzar excepción si querés
+        }
+        int min = inicio->getDato();
+        Nodo* i = inicio->getSiguiente();
+        while (i != nullptr) {
+            if (i->getDato() < min) {
+                min = i->getDato();
+            }
+            i = i->getSiguiente();
+        }
+        return min;
+    }
+};
+
+int main() {
+    Lista lista;
+    int n;
+
+    cout << "¿Cuántos elementos desea agregar? ";
+    cin >> n;
+
+    for (int i = 0; i < n; i++) {
+        int valor;
+        cout << "Ingrese un valor: ";
+        cin >> valor;
+        Nodo* nuevo = new Nodo(valor);
+        lista.AgregarFinal(nuevo);
+    }
+
+    cout << "\nContenido de la lista:" << endl;
+    lista.MostrarLista();
+
+    int minimo = lista.Minimo();
+    if (minimo != -1) {
+        cout << "\nEl valor mínimo en la lista es: " << minimo << endl;
+    }
+
+    return 0;
+}
