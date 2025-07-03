@@ -1,109 +1,67 @@
 #include <iostream>
 using namespace std;
 
-class Nodo {
-private:
+
+typedef struct Nodo* pnodo;
+
+typedef struct Nodo {
     int dato;
-    Nodo* sig;
-public:
-    Nodo(int dato) {
-        this->dato = dato;
-        this->sig = nullptr;
-    }
-
-    void setDato(int valor) {
-        dato = valor;
-    }
-
-    int getDato() {
-        return dato;
-    }
-
-    Nodo* getSiguiente() {
-        return sig;
-    }
-
-    void setSiguiente(Nodo* nuevo) {
-        sig = nuevo;
-    }
+    pnodo siguiente;
 };
 
-class Pila {
-private:
-    Nodo* tope;
-    int cant;
-public:
-    Pila() {
-        tope = nullptr;
-        cant = 0;
-    }
 
-    bool estaVacia() {
-        return tope == nullptr;
-    }
+typedef struct {
+    pnodo cima;
+} Pila;
 
-    void push(int valor) {
-        Nodo* nuevo = new Nodo(valor);
-        nuevo->setSiguiente(tope);
-        tope = nuevo;
-        cant++;
-    }
+void initStack(Pila &p) {
+    p.cima = NULL;
+}
 
-    Nodo* pop() {
-        Nodo* borrado = nullptr;
-        if (!estaVacia()) {
-            borrado = tope;
-            tope = tope->getSiguiente();
-            borrado->setSiguiente(nullptr);
-            cant--;
-        } else {
-            cout << "Pila vacía, no se puede desapilar\n";
-        }
-        return borrado;
-    }
+bool isEmptyStack(Pila p) {
+    return p.cima == NULL;
+}
 
-    int top() {
-        if (!estaVacia()) {
-            return tope->getDato();
-        } else {
-            cout << "Pila vacía\n";
-            return -1; // Indicador de error
-        }
+void pushStack(Pila &p, int valor) {
+    pnodo nuevo = new Nodo;
+    if (nuevo != NULL) {
+        nuevo->dato = valor;
+        nuevo->siguiente = p.cima;
+        p.cima = nuevo;
     }
+}
 
-    int getCantidad() {
-        return cant;
+int popStack(Pila &p) {
+    int extraido;
+    if (isEmptyStack(p)) {
+        extraido = -999;
+    } else {
+        pnodo borrado = p.cima;
+        extraido = borrado->dato;
+        p.cima = borrado->siguiente;
+        delete borrado;
     }
+    return extraido;
+}
 
-    void mostrarPila() {
-        Nodo* i = tope;
-        while (i != nullptr) {
-            cout << i->getDato() << endl;
-            i = i->getSiguiente();
-        }
+int topStack(Pila p) {
+    if (isEmptyStack(p)) {
+        return -999;
+    } else {
+        return p.cima->dato;
     }
-};
+}
+
 
 int main() {
     Pila pila;
+    initStack(pila);
 
-    pila.push(10);
-    pila.push(20);
-    pila.push(30);
+    pushStack(pila, 10);
+    pushStack(pila, 20);
+    pushStack(pila, 30);
 
-    cout << "Contenido de la pila:\n";
-    pila.mostrarPila();
+    int extraido = popStack(pila);      // Devuelve 30
+    int cima = topStack(pila);          // Devuelve 20
 
-    cout << "Tope: " << pila.top() << endl;
-
-    Nodo* n = pila.pop();
-    if (n != nullptr) {
-        cout << "Desapilado: " << n->getDato() << endl;
-        delete n;
-    }
-
-    cout << "Tope después de pop: " << pila.top() << endl;
-    cout << "Cantidad en pila: " << pila.getCantidad() << endl;
-
-    return 0;
 }
