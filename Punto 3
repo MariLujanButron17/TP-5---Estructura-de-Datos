@@ -140,5 +140,4 @@ int main() {
 	int indice = lista.buscarIndice(25);      // Esperado: 1
 	Nodo* buscado = lista.buscarPorIndice(2); // Esperado: nodo con dato 40
 
-	return 0;
 }
