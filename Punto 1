@@ -110,5 +110,5 @@ int main() {
         cout << "\nEl valor mínimo en la lista es: " << minimo << endl;
     }
 
-    return 0;
+
 }
