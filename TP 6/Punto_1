@@ -1,0 +1,268 @@
+#include<iostream>
+using namespace std;
+
+typedef struct tnodo *pnodo;
+typedef struct tnodo {
+    int dato;
+    pnodo sig;
+    pnodo ant;
+};
+
+typedef struct tlista {
+    pnodo inicio;
+    pnodo fin;
+};
+
+// Inicializa la lista
+void IniciarLista(tlista &lista) {
+    lista.inicio = NULL;
+    lista.fin = NULL;
+}
+
+// Crea un nuevo nodo
+void CrearNodo(pnodo &nuevo, int valor) {
+    nuevo = new tnodo;
+    if (nuevo != NULL) {
+        nuevo->dato = valor;
+        nuevo->sig = NULL;
+        nuevo->ant = NULL;
+    }
+}
+
+// Agrega al inicio
+void AgregarInicio(tlista &lista, pnodo nuevo) {
+    if (lista.inicio == NULL) {
+        lista.inicio = nuevo;
+        lista.fin = nuevo;
+    } else {
+        nuevo->sig = lista.inicio;
+        lista.inicio->ant = nuevo;
+        lista.inicio = nuevo;
+    }
+}
+
+// Agrega al final
+void AgregarFinal(tlista &lista, pnodo nuevo) {
+    if (lista.inicio == NULL) {
+        lista.inicio = nuevo;
+        lista.fin = nuevo;
+    } else {
+        lista.fin->sig = nuevo;
+        nuevo->ant = lista.fin;
+        lista.fin = nuevo;
+    }
+}
+
+// Agrega en orden
+void AgregarOrden(tlista &lista, pnodo nuevo) {
+    pnodo i;
+    if (lista.inicio == NULL) {
+        lista.inicio = nuevo;
+        lista.fin = nuevo;
+    } else if (nuevo->dato < lista.inicio->dato) {
+        nuevo->sig = lista.inicio;
+        lista.inicio->ant = nuevo;
+        lista.inicio = nuevo;
+    } else {
+        i = lista.inicio;
+        while (i->sig != NULL && i->sig->dato < nuevo->dato) {
+            i = i->sig;
+        }
+        nuevo->sig = i->sig;
+        nuevo->ant = i;
+        if (i->sig != NULL) {
+            i->sig->ant = nuevo;
+        } else {
+            lista.fin = nuevo;
+        }
+        i->sig = nuevo;
+    }
+}
+
+// Quita del inicio
+void QuitarInicio(tlista &lista, pnodo &extraido) {
+    extraido = NULL;
+    if (lista.inicio != NULL) {
+        extraido = lista.inicio;
+        if (lista.inicio == lista.fin) {
+            lista.inicio = NULL;
+            lista.fin = NULL;
+        } else {
+            lista.inicio = lista.inicio->sig;
+            lista.inicio->ant = NULL;
+            extraido->sig = NULL;
+        }
+    }
+}
+
+// Quita del final
+void QuitarFinal(tlista &lista, pnodo &extraido) {
+    extraido = NULL;
+    if (lista.fin != NULL) {
+        extraido = lista.fin;
+        if (lista.inicio == lista.fin) {
+            lista.inicio = NULL;
+            lista.fin = NULL;
+        } else {
+            lista.fin = lista.fin->ant;
+            lista.fin->sig = NULL;
+            extraido->ant = NULL;
+        }
+    }
+}
+
+// Quita un nodo por valor
+void QuitarNodo(tlista &lista, int valor, pnodo &extraido) {
+    pnodo i;
+    extraido = NULL;
+    if (lista.inicio != NULL) {
+        if (lista.inicio->dato == valor) {
+            QuitarInicio(lista, extraido);
+        } else {
+            i = lista.inicio;
+            while (i != NULL && i->dato != valor) {
+                i = i->sig;
+            }
+            if (i != NULL) {
+                extraido = i;
+                if (i == lista.fin) {
+                    QuitarFinal(lista, extraido);
+                } else {
+                    i->ant->sig = i->sig;
+                    i->sig->ant = i->ant;
+                    extraido->sig = NULL;
+                    extraido->ant = NULL;
+                }
+            }
+        }
+    }
+}
+
+// Buscar valor
+bool Buscar(tlista lista, int valor) {
+    pnodo i = lista.inicio;
+    while (i != NULL) {
+        if (i->dato == valor) return true;
+        i = i->sig;
+    }
+    return false;
+}
+
+// Mostrar lista
+void MostrarLista(tlista lista) {
+    pnodo i = lista.inicio;
+    cout << "Lista: ";
+    while (i != NULL) {
+        cout << i->dato << " ";
+        i = i->sig;
+    }
+    cout << endl;
+}
+
+// Función principal con menú
+int main() {
+    tlista lista;
+    IniciarLista(lista);
+    int opcion, valor;
+    pnodo nuevo, extraido;
+
+    do {
+        cout << "\n--- MENU ---\n";
+        cout << "1. Agregar al inicio\n";
+        cout << "2. Agregar al final\n";
+        cout << "3. Agregar en orden\n";
+        cout << "4. Quitar del inicio\n";
+        cout << "5. Quitar del final\n";
+        cout << "6. Quitar por valor\n";
+        cout << "7. Buscar valor\n";
+        cout << "8. Mostrar lista\n";
+        cout << "0. Salir\n";
+        cout << "Ingrese opcion: ";
+        cin >> opcion;
+
+        switch(opcion) {
+            case 1:
+                cout << "Ingrese valor: ";
+                cin >> valor;
+                CrearNodo(nuevo, valor);
+                AgregarInicio(lista, nuevo);
+                break;
+
+            case 2:
+                cout << "Ingrese valor: ";
+                cin >> valor;
+                CrearNodo(nuevo, valor);
+                AgregarFinal(lista, nuevo);
+                break;
+
+            case 3:
+                cout << "Ingrese valor: ";
+                cin >> valor;
+                CrearNodo(nuevo, valor);
+                AgregarOrden(lista, nuevo);
+                break;
+
+            case 4:
+                QuitarInicio(lista, extraido);
+                if (extraido != NULL) {
+                    cout << "Se quito: " << extraido->dato << endl;
+                    delete extraido;
+                } else {
+                    cout << "Lista vacia\n";
+                }
+                break;
+
+            case 5:
+                QuitarFinal(lista, extraido);
+                if (extraido != NULL) {
+                    cout << "Se quito: " << extraido->dato << endl;
+                    delete extraido;
+                } else {
+                    cout << "Lista vacia\n";
+                }
+                break;
+
+            case 6:
+                cout << "Ingrese valor a quitar: ";
+                cin >> valor;
+                QuitarNodo(lista, valor, extraido);
+                if (extraido != NULL) {
+                    cout << "Se quito: " << extraido->dato << endl;
+                    delete extraido;
+                } else {
+                    cout << "Valor no encontrado\n";
+                }
+                break;
+
+            case 7:
+                cout << "Ingrese valor a buscar: ";
+                cin >> valor;
+                if (Buscar(lista, valor)) {
+                    cout << "Valor encontrado\n";
+                } else {
+                    cout << "Valor no encontrado\n";
+                }
+                break;
+
+            case 8:
+                MostrarLista(lista);
+                break;
+
+            case 0:
+                cout << "Saliendo...\n";
+                break;
+
+            default:
+                cout << "Opcion invalida\n";
+                break;
+        }
+    } while(opcion != 0);
+
+    // Liberar memoria
+    while (lista.inicio != NULL) {
+        QuitarInicio(lista, extraido);
+        delete extraido;
+    }
+
+
+}
