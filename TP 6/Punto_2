@@ -1,0 +1,140 @@
+#include<iostream>
+using namespace std;
+
+typedef struct tnodo *pnodo;
+typedef struct tnodo{
+    int dato;
+    pnodo sig;
+    pnodo ant;
+};
+
+typedef struct tlista{
+    pnodo inicio;
+    pnodo fin;
+};
+
+void IniciarLista(tlista &lista) {
+    lista.inicio = NULL;
+    lista.fin = NULL;
+}
+
+void CrearNodo(pnodo &nuevo, int valor) {
+    nuevo = new tnodo;
+    if(nuevo != NULL) {
+        nuevo->dato = valor;
+        nuevo->sig = NULL;
+        nuevo->ant = NULL;
+    }
+}
+
+void AgregarInicio(tlista &lista, pnodo nuevo) {
+    if(lista.inicio == NULL){
+        lista.inicio = nuevo;
+        lista.fin = nuevo;
+    } else {
+        nuevo->sig = lista.inicio;
+        lista.inicio->ant = nuevo;
+        lista.inicio = nuevo;
+    }
+}
+
+void AgregarFinal(tlista &lista, pnodo nuevo) {
+    if(lista.inicio == NULL){
+        lista.inicio = nuevo;
+        lista.fin = nuevo;
+    } else {
+        lista.fin->sig = nuevo;
+        nuevo->ant = lista.fin;
+        lista.fin = nuevo;
+    }
+}
+
+void QuitarInicio(tlista &lista) {
+    pnodo extraido;
+    if(lista.inicio != NULL) {
+        extraido = lista.inicio;
+        if(lista.inicio == lista.fin) {
+            lista.inicio = NULL;
+            lista.fin = NULL;
+        } else {
+            lista.inicio = lista.inicio->sig;
+            lista.inicio->ant = NULL;
+        }
+        cout << "Se elimino del inicio: " << extraido->dato << endl;
+        delete extraido;
+    } else {
+        cout << "La lista esta vacia. No se puede eliminar del inicio." << endl;
+    }
+}
+
+void QuitarFinal(tlista &lista) {
+    pnodo extraido;
+    if(lista.fin != NULL) {
+        extraido = lista.fin;
+        if(lista.inicio == lista.fin) {
+            lista.inicio = NULL;
+            lista.fin = NULL;
+        } else {
+            lista.fin = lista.fin->ant;
+            lista.fin->sig = NULL;
+        }
+        cout << "Se elimino del final: " << extraido->dato << endl;
+        delete extraido;
+    } else {
+        cout << "La lista esta vacia. No se puede eliminar del final." << endl;
+    }
+}
+
+void MostrarLista(tlista lista) {
+    pnodo i = lista.inicio;
+    cout << "Contenido de la lista: ";
+    while(i != NULL){
+        cout << i->dato << " ";
+        i = i->sig;
+    }
+    cout << endl;
+}
+
+int main() {
+    tlista lista;
+    IniciarLista(lista);
+    pnodo nuevo;
+    int valor;
+
+    cout << "Agregando valores al inicio:\n";
+    CrearNodo(nuevo, 10);
+    AgregarInicio(lista, nuevo);
+    MostrarLista(lista);
+
+    CrearNodo(nuevo, 20);
+    AgregarInicio(lista, nuevo);
+    MostrarLista(lista);
+
+    cout << "\nAgregando valores al final:\n";
+    CrearNodo(nuevo, 30);
+    AgregarFinal(lista, nuevo);
+    MostrarLista(lista);
+
+    CrearNodo(nuevo, 40);
+    AgregarFinal(lista, nuevo);
+    MostrarLista(lista);
+
+    cout << "\nEliminando nodos del inicio:\n";
+    QuitarInicio(lista);
+    MostrarLista(lista);
+
+    QuitarInicio(lista);
+    MostrarLista(lista);
+
+    cout << "\nEliminando nodos del final:\n";
+    QuitarFinal(lista);
+    MostrarLista(lista);
+
+    QuitarFinal(lista);
+    MostrarLista(lista);
+
+    cout << "\nIntentando eliminar de lista vacia:\n";
+    QuitarInicio(lista);
+    QuitarFinal(lista);
+
+}
