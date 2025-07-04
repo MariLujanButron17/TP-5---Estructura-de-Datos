@@ -1,0 +1,91 @@
+#include<iostream>
+using namespace std;
+
+typedef struct tnodo *pnodo;
+typedef struct tnodo{
+    int dato;
+    pnodo sig;
+    pnodo ant;
+};
+
+typedef struct tlista{
+    pnodo inicio;
+    pnodo fin;
+};
+
+void IniciarLista(tlista &lista){
+    lista.inicio = NULL;
+    lista.fin = NULL;
+}
+
+void CrearNodo(pnodo &nuevo, int valor){
+    nuevo = new tnodo;
+    if(nuevo != NULL){
+        nuevo->dato = valor;
+        nuevo->sig = NULL;
+        nuevo->ant = NULL;
+    }
+}
+
+void AgregarFinal(tlista &lista, pnodo nuevo){
+    if(lista.inicio == NULL){
+        lista.inicio = nuevo;
+        lista.fin = nuevo;
+    }
+    else{
+        lista.fin->sig = nuevo;
+        nuevo->ant = lista.fin;
+        lista.fin = nuevo;
+    }
+}
+
+void MostrarMayorMenor(tlista lista){
+    pnodo i = lista.inicio;
+    int mayor, menor;
+
+    if(i != NULL){
+        mayor = i->dato;
+        menor = i->dato;
+
+        while(i != NULL){
+            if(i->dato > mayor){
+                mayor = i->dato;
+            }
+            if(i->dato < menor){
+                menor = i->dato;
+            }
+            i = i->sig;
+        }
+
+        cout << "Valor mayor: " << mayor << endl;
+        cout << "Valor menor: " << menor << endl;
+    }
+    else{
+        cout << "La lista esta vacia." << endl;
+    }
+}
+
+int main(){
+    tlista lista;
+    pnodo nuevo;
+
+    IniciarLista(lista);
+
+    CrearNodo(nuevo, 15);
+    AgregarFinal(lista, nuevo);
+
+    CrearNodo(nuevo, 8);
+    AgregarFinal(lista, nuevo);
+
+    CrearNodo(nuevo, 27);
+    AgregarFinal(lista, nuevo);
+
+    CrearNodo(nuevo, 4);
+    AgregarFinal(lista, nuevo);
+
+    CrearNodo(nuevo, 19);
+    AgregarFinal(lista, nuevo);
+
+    MostrarMayorMenor(lista);
+
+}
